@@ -25,6 +25,8 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', { useNewUrlParser: true
     }); */
         // console.log(JSON.stringify(new Date(result.ops[0]._id.getTimestamp()), undefined, 2));
         //db.close();
+
+        
         db.collection('Todos').find().count().then((count) => {
             console.log('count: ' + count);
         }, (err) => {
