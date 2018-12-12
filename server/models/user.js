@@ -73,6 +73,36 @@ userSchema.statics.findByToken = function (token) {
     });
 };
 
+userSchema.statics.findByCredentials = function (email, password) {
+    var User = this;
+    
+    return User.findOne({email}).then((user) => {
+        if (!user) {
+            return Promise.reject();
+        }
+        // bcrypt only supports callbacks
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    resolve(user);
+                } else {
+                    reject(); // Sends an HTTP 400
+                }                
+            });
+        });
+    });
+
+
+    // try {
+    //     decoded = jwt.verify(token, '123abc');
+    // } catch (e) {
+    //     // return new Promise((resolve, reject) => {
+    //     //     reject();
+    //     // });
+    //     return Promise.reject();
+    // }
+};
+
 userSchema.pre('save', function (next) {
     var user = this;
     if (user.isModified('password')) {
